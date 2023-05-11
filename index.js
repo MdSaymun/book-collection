@@ -4,17 +4,21 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
+// Serve static index.html file
 app.get("/", (req, res) => {
   res.sendFile("index.html", { root: __dirname + "/public" });
 });
 
+// Books array
 let books = [];
 
+// Route to get all books
 app.get("/books", (req, res) => {
   res.json(books);
 });
 
-app.post("/books", (req, res, next) => {
+// Route to add a new book
+app.post("/books", (req, res) => {
   const { title, author, publishedDate } = req.body;
   if (!title)
     return res.status(400).json({
@@ -31,6 +35,7 @@ app.post("/books", (req, res, next) => {
   res.status(200).json(book);
 });
 
+// Route to delete a book
 app.delete("/books/:id", (req, res) => {
   const id = req.params.id;
   const index = books.findIndex((book) => book.id === id);
@@ -42,6 +47,7 @@ app.delete("/books/:id", (req, res) => {
   }
 });
 
+// Start server
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
